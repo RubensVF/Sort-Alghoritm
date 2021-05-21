@@ -10,7 +10,7 @@ float *sample;            //Array muestra de elementos a ordenar.
 int n;                    //Tamaño de la muestra.
 float x;                  //Ancho de los rectangulos
 float y;                  //Altura maxima
-
+int methodslected = 0;        //Metodo sleccionado en el menu
 //Funcion que dibuja
 void drawbar(float arr[], int size)
 {
@@ -34,17 +34,51 @@ void drawbar(float arr[], int size)
    usleep(100000);
 }
 
+void menu(int choice){
+   methodslected = choice;
+   glutPostRedisplay();
+}
 
 //Funcion que renderiza la ecena,
 void renderFunction()
-{
-   bubbleSort(sample,n,drawbar);
-   selectionSort(sample,n,drawbar);
-   insertionSort(sample,n,drawbar);
-   shellSort(sample,n,drawbar);
-   mergeSort(sample,n,drawbar);
-   quickSort(sample,n,drawbar); 
-   heapSort(sample,n,drawbar);
+{  
+   switch (methodslected)
+   {
+   case 0:
+      drawbar(sample,n);
+      break;
+   case 1:
+      bubbleSort(sample,n,drawbar);
+      methodslected=-1;
+      break;
+   case 2:
+      selectionSort(sample,n,drawbar);
+      methodslected=-1;
+      break;
+   case 3:
+      insertionSort(sample,n,drawbar);
+      methodslected=-1;
+      break;   
+   case 4:
+      shellSort(sample,n,drawbar);
+      methodslected=-1;
+      break;
+   case 5:
+      mergeSort(sample,n,drawbar);
+      methodslected=-1;
+      break;
+   case 6:
+      quickSort(sample,n,drawbar);
+      methodslected=-1;
+      break;
+   case 7:
+      heapSort(sample,n,drawbar);
+      methodslected=-1;
+      break;
+
+   default: 
+      break;
+   }
 }
 
 
@@ -64,26 +98,37 @@ float max(float x[], int k)
 int main(int argc, char **argv)
 {
 
-   n = 10;
+   printf("Introduzca el tamaño del arreglo:");
+   scanf("%d", &n);
    sample = (float *)malloc(sizeof(float) * n);
-   sample[0] = 20;
-   sample[1] = 9;
-   sample[2] = 8;
-   sample[3] = 7;
-   sample[4] = 6;
-   sample[5] = 5;
-   sample[6] = 4;
-   sample[7] = 3;
-   sample[8] = 2;
-   sample[9] = 10;
+   
+   for(int i = 0;i<n;i++){
+      printf("sample[%d] = ",i);
+      scanf("%f",&sample[i]);
+   }
+
    x = 2 / ((float)n);
    y = max(sample, n);
 
    glutInit(&argc, argv);                 // Initialize GLUT
-   glutCreateWindow("OpenGL Setup Test"); // Create a window with the given title
+   glutCreateWindow("Algortimos de ordenamiento"); // Create a window with the given title
    glutInitWindowSize(800, 800);          // Set the window's initial width & height
    glutInitWindowPosition(50, 50);        // Position the window's initial top-left corner
    glutDisplayFunc(renderFunction);       // Register display callback handler for window re-paint
+
+   glutCreateMenu(menu);
+	glutAddMenuEntry("Intercambio directo", 1);
+	glutAddMenuEntry("Seleccion directa", 2);
+	glutAddMenuEntry("Insercion directa ", 3);
+	glutAddMenuEntry("Shellsort", 4);
+	glutAddMenuEntry("Heapsort", 5);
+   glutAddMenuEntry("Quicksort", 6);
+   glutAddMenuEntry("Mergesort", 7);
+
+   glutAttachMenu(GLUT_RIGHT_BUTTON);
+
    glutMainLoop();                        // Enter the event-processing loop
+
+
    return 0;
 }
